@@ -2,7 +2,7 @@ import Express, { Request, Response } from "express";
 import { errorLogger, errorResponder } from "./ErrorController";
 const app = Express();
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/test", (req: Request, res: Response) => {
   res.send("Allo Allo!");
 });
 
