@@ -24,6 +24,9 @@ export const getMovies = async (
         (movie) =>
           +movie.runtime <= +duration + 10 && +movie.runtime >= +duration - 10
       );
+      if (result.length === 0) {
+        throw new Error("No movies found with provided duration");
+      }
     }
 
     // with genre query param
@@ -44,6 +47,10 @@ export const getMovies = async (
           movieGenres.includes(genre as string)
         );
       });
+
+      if (result.length === 0) {
+        throw new Error("Provided genres do not match any movies");
+      }
 
       result = result.sort((a, b) => {
         const aMovie = a.genres.filter((genre) =>
