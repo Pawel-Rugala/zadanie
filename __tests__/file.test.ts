@@ -1,9 +1,10 @@
-import { readJson } from "../_app/FileHandler";
+import { readJson, writeJson } from "../_app/FileHandler";
 import path from "path";
 const filePath = path.resolve(__dirname, "..", "data", "db.json");
+const testFilePath = path.resolve(__dirname, "test.json");
 
 //example movie from db.json
-const example = {
+const example: TMovie = {
   id: 1,
   title: "Beetlejuice",
   year: "1988",
@@ -16,6 +17,7 @@ const example = {
     "https://images-na.ssl-images-amazon.com/images/M/MV5BMTUwODE3MDE0MV5BMl5BanBnXkFtZTgwNTk1MjI4MzE@._V1_SX300.jpg",
 };
 
+//helper function
 expect.extend({
   toContainObject(received, argument) {
     const pass = this.equals(
@@ -52,6 +54,24 @@ describe("Read JSON File", () => {
     expect(file).toHaveProperty("movies");
     const { genres, movies } = file as TMovies;
     expect(genres).toContain("Action");
+    expect(movies).toContainObject(example);
+  });
+});
+
+describe("Write JSON File", () => {
+  test("It should return error with msg", async () => {
+    await expect(
+      writeJson("", { genres: [], movies: [example] })
+    ).rejects.toEqual("File not found");
+  });
+  test("it should write data to file and return msg ", async () => {
+    const res = await writeJson(testFilePath, {
+      genres: [],
+      movies: [example],
+    });
+    expect(res).toEqual("File written");
+    const file = await readJson(testFilePath);
+    const { movies } = file as TMovies;
     expect(movies).toContainObject(example);
   });
 });
