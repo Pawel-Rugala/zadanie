@@ -1,14 +1,12 @@
-import Express, { Request, Response } from "express";
+import Express, { Request, Response, urlencoded } from "express";
 import { errorLogger, errorResponder } from "./ErrorController";
-import { getMovies } from "./MovieController";
+import { getMovies, addMovie } from "./MovieController";
 const app = Express();
 
-app
-  .route("/")
-  .get(getMovies)
-  .post((req, res) => {
-    throw new Error("Not implemented");
-  });
+app.use(urlencoded({ extended: true }));
+app.use(Express.json());
+
+app.route("/").get(getMovies).post(addMovie);
 
 app.get("/test", (req: Request, res: Response) => {
   res.send("Allo Allo!");
